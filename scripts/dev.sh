@@ -11,6 +11,7 @@ function usage() {
   echo "  typecheck - Run mypy type checker"
   echo "  fix       - Fix linting issues automatically"
   echo "  check-all - Run all checks"
+  echo "  tests     - Run tests"
   echo ""
   exit 1
 }
@@ -45,6 +46,10 @@ case "$1" in
     uv run ruff format src/ --check && \
     uv run mypy src/ && \
     echo "✅ All checks completed!"
+    ;;
+  tests)
+    echo "🧪 Running tests..."
+    uv run pytest tests/
     ;;
   *)
     usage

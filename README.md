@@ -193,5 +193,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgments
 
 - Built on top of the powerful [FFmpeg](https://ffmpeg.org/) multimedia framework
-- Inspired by the needs of speech-to-text preprocessing workflows
-- 
+
