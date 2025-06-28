@@ -25,11 +25,6 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.3.0",
-    "mypy>=1.8.0",
-    "pytest>=7.4.0",
-    "pytest-mock>=3.11.1",
-    "pydub>=0.25.1",
 ]
 
 [project.urls]
@@ -102,3 +97,14 @@ exclude = [
 module = "tests.*"
 disallow_untyped_defs = false
 disallow_incomplete_defs = false
+disallow_untyped_decorators = false
+
+[dependency-groups]
+dev = [
+    "ruff>=0.3.0",
+    "mypy>=1.8.0",
+    "pytest>=7.4.0",
+    "pytest-mock>=3.11.1",
+    "pydub>=0.25.1",
+    "pre-commit>=4.2.0",
+]

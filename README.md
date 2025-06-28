@@ -45,12 +45,12 @@ if audio:
     print(f"Duration: {audio.duration:.2f} seconds")
     print(f"Format: {audio.format}")
     print(f"Silence periods detected: {len(audio.silence_periods)}")
-    
+
     # Clean up the audio for speech-to-text
     cleaned = audio.strip(output_path=Path("recording_stripped.wav"))
     faster = cleaned.speed(output_path=Path("recording_stripped_fast.wav"), speed_factor=1.2)
     final = faster.convert(output_path=Path("clean.mp3"))
-    
+
     print(f"Processed file saved: {final.path}")
 ```
 
@@ -123,12 +123,12 @@ try:
         print(f"Success: {result.path}")
     else:
         print("Failed to load audio file")
-        
+
 except FFmpegError as e:
     print(f"FFmpeg error: {e}")
     if e.stderr:
         print(f"Details: {e.stderr}")
-        
+
 except SpeechPrepError as e:
     print(f"Processing error: {e}")
 ```
@@ -193,4 +193,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgments
 
 - Built on top of the powerful [FFmpeg](https://ffmpeg.org/) multimedia framework
-
