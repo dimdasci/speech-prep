@@ -6,6 +6,7 @@ from typing import Optional
 
 from .detection import calculate_median_silence, detect_silence
 from .exceptions import SpeechPrepError
+from .formats import AudioFormat
 from .processing import adjust_speed, convert_format, strip_silence
 from .utils import format_time, get_audio_properties
 
@@ -158,20 +159,24 @@ class SoundFile:
             return None
 
     def convert(
-        self, output_path: Path, audio_bitrate: Optional[str] = None
+        self,
+        output_path: Path,
+        target_format: AudioFormat,
+        audio_bitrate: Optional[str] = None,
     ) -> Optional["SoundFile"]:
         """
         Convert the audio file to a different format.
 
         Args:
             output_path: Path to save the converted file
+            target_format: Target audio format
             audio_bitrate: Optional bitrate for the output file (e.g., '192k', '320k')
 
         Returns:
             A new SoundFile instance for the converted file, or None if operation failed
         """
         try:
-            convert_format(self.path, output_path, audio_bitrate)
+            convert_format(self.path, output_path, target_format, audio_bitrate)
             return SoundFile(
                 output_path, self.noise_threshold_db, self.min_silence_duration
             )

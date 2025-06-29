@@ -5,6 +5,7 @@ from pathlib import Path
 import subprocess
 
 from .exceptions import AudioPropertiesError, FileValidationError
+from .formats import AudioFormat
 
 
 def validate_file(file_path: Path) -> bool:
@@ -29,7 +30,7 @@ def validate_file(file_path: Path) -> bool:
     return True
 
 
-def get_audio_properties(file_path: Path) -> tuple[float, int, str]:
+def get_audio_properties(file_path: Path) -> tuple[float, int, AudioFormat]:
     """
     Extract audio properties (duration, file size, format) using ffprobe.
 
@@ -37,7 +38,8 @@ def get_audio_properties(file_path: Path) -> tuple[float, int, str]:
         file_path: Path to the audio file
 
     Returns:
-        Tuple of (duration, file_size, audio_format)
+        Tuple of (duration, file_size, audio_format) where audio_format
+        is an AudioFormat enum representing the detected audio format
 
     Raises:
         AudioPropertiesError: If properties cannot be extracted
@@ -71,9 +73,16 @@ def get_audio_properties(file_path: Path) -> tuple[float, int, str]:
         probe_data = json.loads(probe_result.stdout)["format"]
         duration = float(probe_data["duration"])
         file_size = int(probe_data["size"])
-        audio_format = probe_data["format_name"].split(",")[
+        format_str = probe_data["format_name"].split(",")[
             0
         ]  # Get the first format name
+
+        # Convert format string to enum
+        try:
+            audio_format = AudioFormat(format_str.lower())
+        except ValueError:
+            # If not a direct match, use UNKNOWN
+            audio_format = AudioFormat.UNKNOWN
 
         if duration <= 0 or file_size <= 0:
             raise AudioPropertiesError(

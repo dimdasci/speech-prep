@@ -13,6 +13,7 @@ from .exceptions import (
     SilenceDetectionError,
     SpeechPrepError,
 )
+from .formats import AudioFormat
 
 # Import version from hatch-vcs
 try:
@@ -25,6 +26,7 @@ except ImportError:
 
 __all__ = [
     "SoundFile",
+    "AudioFormat",
     "SpeechPrepError",
     "FFmpegError",
     "FileValidationError",
