@@ -43,7 +43,7 @@ jobs:
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
-      run: uv run twine upload --repository testpypi dist/*
+      run: uv run twine upload --repository testpypi --skip-existing --verbose dist/*
 
     - name: Publish to PyPI (on tags)
       if: startsWith(github.ref, 'refs/tags/v')
