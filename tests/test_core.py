@@ -52,7 +52,7 @@ class TestSoundFileInit:
         # Mock get_audio_properties to return test values
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            return_value=(5.0, "wav", 10000),
+            return_value=(5.0, 10000, "wav"),
         )
 
         # Should not raise an exception, but should set silence_periods to empty list
@@ -74,7 +74,7 @@ class TestSoundFileEquality:
         # Mock dependencies to ensure consistent behavior
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            return_value=(5.0, "wav", 10000),
+            return_value=(5.0, 10000, "wav"),
         )
         mocker.patch(
             "speech_prep.core.detect_silence",
@@ -97,7 +97,7 @@ class TestSoundFileEquality:
         # Mock dependencies to ensure consistent behavior
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            return_value=(5.0, "wav", 10000),
+            return_value=(5.0, 10000, "wav"),
         )
         mocker.patch(
             "speech_prep.core.detect_silence",
@@ -118,7 +118,7 @@ class TestSoundFileEquality:
         # Mock dependencies to ensure consistent behavior
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            return_value=(5.0, "wav", 10000),
+            return_value=(5.0, 10000, "wav"),
         )
         mocker.patch(
             "speech_prep.core.detect_silence",
@@ -145,7 +145,7 @@ class TestSoundFileStringRepresentation:
         # Mock dependencies to return consistent values
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            return_value=(duration, "wav", 10000),
+            return_value=(duration, 10000, "wav"),
         )
         mocker.patch(
             "speech_prep.core.detect_silence",
@@ -172,7 +172,7 @@ class TestSoundFileStringRepresentation:
         # Mock dependencies
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            return_value=(duration, "wav", 10000),
+            return_value=(duration, 10000, "wav"),
         )
         mocker.patch(
             "speech_prep.core.detect_silence",
@@ -200,7 +200,7 @@ class TestSoundFileStringRepresentation:
         # Mock dependencies
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            return_value=(duration, "wav", 10000),
+            return_value=(duration, 10000, "wav"),
         )
         mocker.patch(
             "speech_prep.core.detect_silence",
@@ -231,7 +231,7 @@ class TestSoundFileStringRepresentation:
         # Mock dependencies
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            return_value=(duration, "wav", 10000),
+            return_value=(duration, 10000, "wav"),
         )
         mocker.patch(
             "speech_prep.core.detect_silence",
@@ -278,7 +278,7 @@ class TestSoundFileStrip:
         # Mock dependencies for the input file
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            side_effect=[(duration, "wav", 10000), (3.0, "wav", 8000)],
+            side_effect=[(duration, 10000, "wav"), (3.0, 8000, "wav")],
         )
         mocker.patch(
             "speech_prep.core.detect_silence",
@@ -327,7 +327,7 @@ class TestSoundFileStrip:
         # Mock dependencies
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            return_value=(duration, "wav", 10000),
+            return_value=(duration, 10000, "wav"),
         )
         mocker.patch(
             "speech_prep.core.detect_silence",
@@ -362,7 +362,7 @@ class TestSoundFileStrip:
         # Mock dependencies
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            return_value=(duration, "wav", 10000),
+            return_value=(duration, 10000, "wav"),
         )
         mocker.patch(
             "speech_prep.core.detect_silence",
@@ -411,7 +411,7 @@ class TestSoundFileConvert:
         # Mock dependencies for the input file
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            side_effect=[(duration, "wav", 10000), (duration, "mp3", 8000)],
+            side_effect=[(duration, 10000, "wav"), (duration, 8000, "mp3")],
         )
         mocker.patch(
             "speech_prep.core.detect_silence",
@@ -454,7 +454,7 @@ class TestSoundFileConvert:
         # Mock dependencies
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            return_value=(duration, "wav", 10000),
+            return_value=(duration, 10000, "wav"),
         )
         mocker.patch(
             "speech_prep.core.detect_silence",
@@ -501,8 +501,8 @@ class TestSoundFileSpeed:
         mocker.patch(
             "speech_prep.core.get_audio_properties",
             side_effect=[
-                (duration, "wav", 10000),
-                (duration / speed_factor, "wav", 8000),
+                (duration, 10000, "wav"),
+                (duration / speed_factor, 8000, "wav"),
             ],
         )
         mocker.patch(
@@ -550,7 +550,7 @@ class TestSoundFileSpeed:
         # Mock dependencies
         mocker.patch(
             "speech_prep.core.get_audio_properties",
-            return_value=(duration, "wav", 10000),
+            return_value=(duration, 10000, "wav"),
         )
         mocker.patch(
             "speech_prep.core.detect_silence",
@@ -610,13 +610,13 @@ class TestSoundFileIntegration:
         # Mock get_audio_properties to return different values for different files
         def mock_get_properties(file_path):
             if str(file_path).endswith("stripped.wav"):
-                return 3.0, "wav", 8000
+                return 3.0, 8000, "wav"
             elif str(file_path).endswith("sped.wav"):
-                return 2.0, "wav", 7000
+                return 2.0, 7000, "wav"
             elif str(file_path).endswith("final.mp3"):
-                return 2.0, "mp3", 6000
+                return 2.0, 6000, "mp3"
             else:
-                return 5.0, "wav", 10000
+                return 5.0, 10000, "wav"
 
         mocker.patch(
             "speech_prep.core.get_audio_properties", side_effect=mock_get_properties

@@ -5,6 +5,7 @@ This package provides tools to prepare audio files for speech-to-text processing
 including silence detection and removal, speed adjustment, and format conversion.
 """
 
+from ._version import __version__
 from .core import SoundFile
 from .exceptions import (
     AudioPropertiesError,
@@ -14,8 +15,6 @@ from .exceptions import (
     SpeechPrepError,
 )
 
-__version__ = "0.1.0"
-
 __all__ = [
     "SoundFile",
     "SpeechPrepError",
@@ -23,4 +22,5 @@ __all__ = [
     "FileValidationError",
     "AudioPropertiesError",
     "SilenceDetectionError",
+    "__version__",
 ]

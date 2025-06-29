@@ -1,6 +1,6 @@
 [project]
 name = "speech-prep"
-version = "0.1.0"
+dynamic = ["version"]  # Tell build tools that version is determined dynamically
 description = "Audio preprocessing toolkit for speech-to-text applications using ffmpeg"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -33,8 +33,12 @@ Repository = "https://github.com/dimdasci/speech-prep"
 Issues = "https://github.com/dimdasci/speech-prep/issues"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+path = "src/speech_prep/_version.py"
 
 [tool.ruff]
 target-version = "py39"
@@ -107,4 +111,5 @@ dev = [
     "pytest-mock>=3.11.1",
     "pydub>=0.25.1",
     "pre-commit>=4.2.0",
+    "hatch-vcs>=0.5.0",
 ]
