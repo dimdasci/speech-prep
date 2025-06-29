@@ -41,7 +41,10 @@ class TestSoundFileIntegrationWithRealFiles:
         # Verify basic properties
         assert sound_file.path == file_path
         assert sound_file.duration > 0
-        assert isinstance(sound_file.format, str)
+        assert sound_file.format is not None
+        from speech_prep.formats import AudioFormat
+
+        assert isinstance(sound_file.format, AudioFormat)
         assert sound_file.file_size > 0
 
         # Verify silence detection
@@ -102,10 +105,12 @@ class TestSoundFileIntegrationWithRealFiles:
         print(f"Sped file: {sped}")
 
         # 3. Convert format
-        converted = sped.convert(converted_path, audio_bitrate="192k")
+        from speech_prep.formats import AudioFormat
+
+        converted = sped.convert(converted_path, AudioFormat.MP3, audio_bitrate="192k")
         assert converted is not None, "Convert operation failed"
         assert converted.path.exists(), "Converted file doesn't exist"
-        assert converted.format.lower() == "mp3", "Format conversion failed"
+        assert converted.format == AudioFormat.MP3, "Format conversion failed"
         print(f"Converted file: {converted}")
 
         # Verify final file properties

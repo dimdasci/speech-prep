@@ -5,6 +5,7 @@ import subprocess
 from typing import Optional
 
 from .exceptions import FFmpegError
+from .formats import AudioFormat
 
 
 def strip_silence(
@@ -67,7 +68,10 @@ def strip_silence(
 
 
 def convert_format(
-    input_path: Path, output_path: Path, audio_bitrate: Optional[str] = None
+    input_path: Path,
+    output_path: Path,
+    target_format: AudioFormat,
+    audio_bitrate: Optional[str] = None,
 ) -> None:
     """
     Convert the audio file to a different format.
@@ -75,6 +79,7 @@ def convert_format(
     Args:
         input_path: Path to the input audio file
         output_path: Path to save the converted file
+        target_format: Target audio format
         audio_bitrate: Optional bitrate for the output file (e.g., '192k', '320k')
 
     Raises:
@@ -90,9 +95,21 @@ def convert_format(
     # Add output file
     cmd.append(str(output_path))
 
-    input_format = input_path.suffix.lower().lstrip(".")
-    output_format = output_path.suffix.lower().lstrip(".")
-    print(f"Converting {input_path.name} from {input_format} to {output_format}")
+    # Determine the input format from the file extension
+    input_format = AudioFormat.UNKNOWN
+    try:
+        ext = input_path.suffix.lower().lstrip(".")
+        input_format = AudioFormat(ext)
+    except ValueError:
+        pass  # Keep as UNKNOWN if not found
+
+    # Use the provided target_format
+    output_format = target_format
+
+    print(
+        f"Converting {input_path.name} from "
+        f"{input_format.value} to {output_format.value}"
+    )
 
     _run_ffmpeg_command(cmd, "converting format")
 
@@ -136,10 +153,16 @@ def adjust_speed(input_path: Path, output_path: Path, speed_factor: float) -> No
     filter_str = ",".join(atempo_filters) if atempo_filters else "atempo=1.0"
 
     # Determine appropriate codec based on output format
-    output_format = output_path.suffix.lower()
-    if output_format == ".mp3":
+    output_format = AudioFormat.UNKNOWN
+    try:
+        ext = output_path.suffix.lower().lstrip(".")
+        output_format = AudioFormat(ext)
+    except ValueError:
+        pass  # Keep as UNKNOWN
+
+    if output_format == AudioFormat.MP3:
         codec = "libmp3lame"
-    elif output_format == ".wav":
+    elif output_format == AudioFormat.WAV:
         codec = "pcm_s16le"
     else:
         codec = "libmp3lame"  # Default to mp3 codec

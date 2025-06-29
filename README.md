@@ -35,21 +35,19 @@ uv sync  # or pip install -e .
 ## Quick Start
 
 ```python
-from speech_prep import SoundFile
+from speech_prep import SoundFile, AudioFormat
 from pathlib import Path
 
 # Load an audio file
 audio = SoundFile(Path("recording.wav"))
 
 if audio:
-    print(f"Duration: {audio.duration:.2f} seconds")
-    print(f"Format: {audio.format}")
-    print(f"Silence periods detected: {len(audio.silence_periods)}")
+    print(audio)  # Shows duration, format, file size, and silence periods
 
     # Clean up the audio for speech-to-text
     cleaned = audio.strip(output_path=Path("recording_stripped.wav"))
     faster = cleaned.speed(output_path=Path("recording_stripped_fast.wav"), speed_factor=1.2)
-    final = faster.convert(output_path=Path("clean.mp3"))
+    final = faster.convert(output_path=Path("clean.mp3", target_format=AudioFormat.MP3))
 
     print(f"Processed file saved: {final.path}")
 ```
@@ -59,7 +57,7 @@ if audio:
 ### Basic Operations
 
 ```python
-from speech_prep import SoundFile
+from speech_prep import SoundFile, AudioFormat
 from pathlib import Path
 
 # Load audio file
@@ -78,17 +76,18 @@ cleaned = audio.strip(output_path=Path("interview_leading.wav"), trailing=False)
 faster = audio.speed(output_path=Path("interview_fast.wav"), speed_factor=1.5)
 
 # Convert format
-mp3_file = audio.convert(output_path=Path("output.mp3"))
+mp3_file = audio.convert(output_path=Path("output.mp3"), target_format=AudioFormat.MP3)
 ```
 
 ### Processing Pipeline
 
 ```python
-from speech_prep import SoundFile
+from speech_prep import AudioFormat, SoundFile
 from pathlib import Path
 
 def prepare_for_transcription(input_file: Path, output_file: Path):
     """Prepare audio file for speech-to-text processing."""
+
     # Load the original file
     audio = SoundFile(input_file)
     if not audio:
@@ -96,7 +95,7 @@ def prepare_for_transcription(input_file: Path, output_file: Path):
     # Processing pipeline
     stripped = audio.strip(output_path=input_file.with_stem(input_file.stem + "_stripped"))
     faster = stripped.speed(output_path=input_file.with_stem(input_file.stem + "_stripped_fast"), speed_factor=1.1)
-    processed = faster.convert(output_path=output_file)
+    processed = faster.convert(output_path=output_file, target_format=AudioFormat.MP3)
     if processed:
         print(f"Original duration: {audio.duration:.2f}s")
         print(f"Processed duration: {processed.duration:.2f}s")
@@ -150,8 +149,10 @@ audio = SoundFile(
 cleaned = audio.strip(output_path=Path("custom_output.wav"))
 
 # Custom conversion settings
+from speech_prep import AudioFormat
 mp3 = audio.convert(
     output_path=Path("output.mp3"),
+    target_format=AudioFormat.MP3,
     audio_bitrate="192k"  # Custom bitrate
 )
 ```
@@ -168,15 +169,32 @@ SoundFile(file_path, noise_threshold_db=-30, min_silence_duration=0.5)
 #### Methods
 - **`strip(output_path, leading=True, trailing=True)`**: Remove silence
 - **`speed(output_path, speed_factor)`**: Adjust playback speed
-- **`convert(output_path, audio_bitrate=None)`**: Convert format
+- **`convert(output_path, target_format, audio_bitrate=None)`**: Convert format
 
 #### Properties
 - **`path`**: Path to the audio file
 - **`duration`**: Duration in seconds
-- **`format`**: Audio format
+- **`format`**: Audio format (AudioFormat enum)
 - **`file_size`**: File size in bytes
 - **`silence_periods`**: List of detected silence periods
 - **`median_silence`**: Median silence duration
+
+### AudioFormat Enum
+
+The `AudioFormat` enum represents supported audio formats:
+
+```python
+from speech_prep import AudioFormat
+
+# Available formats
+AudioFormat.MP3   # MP3 format
+AudioFormat.WAV   # WAV format
+AudioFormat.FLAC  # FLAC format
+AudioFormat.AAC   # AAC format
+AudioFormat.OGG   # OGG format
+AudioFormat.M4A   # M4A format
+AudioFormat.UNKNOWN  # Unknown/unsupported format
+```
 
 ## Contributing
 

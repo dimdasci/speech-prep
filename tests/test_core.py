@@ -430,11 +430,16 @@ class TestSoundFileConvert:
         # Create the original SoundFile
         sound_file = SoundFile(input_path)
 
+        # Import AudioFormat
+        from speech_prep.formats import AudioFormat
+
         # Call convert method
-        result = sound_file.convert(output_path, audio_bitrate="192k")
+        result = sound_file.convert(output_path, AudioFormat.MP3, audio_bitrate="192k")
 
         # Verify convert_format was called with correct arguments
-        mock_convert.assert_called_once_with(input_path, output_path, "192k")
+        mock_convert.assert_called_once_with(
+            input_path, output_path, AudioFormat.MP3, "192k"
+        )
 
         # Verify a new SoundFile instance was returned
         assert result is not None
@@ -473,8 +478,11 @@ class TestSoundFileConvert:
         # Create the SoundFile
         sound_file = SoundFile(input_path)
 
+        # Import AudioFormat
+        from speech_prep.formats import AudioFormat
+
         # Call convert method
-        result = sound_file.convert(output_path)
+        result = sound_file.convert(output_path, AudioFormat.MP3)
 
         # Verify error is logged and None is returned
         mock_logger.error.assert_called_once()
@@ -642,7 +650,10 @@ class TestSoundFileIntegration:
         sped = stripped.speed(sped_path, 1.5)
         assert sped is not None, "Speed operation failed"
 
-        converted = sped.convert(converted_path, audio_bitrate="192k")
+        # Import AudioFormat
+        from speech_prep.formats import AudioFormat
+
+        converted = sped.convert(converted_path, AudioFormat.MP3, audio_bitrate="192k")
         assert converted is not None, "Convert operation failed"
 
         # Verify the final file exists and has expected properties
