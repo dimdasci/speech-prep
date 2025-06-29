@@ -38,7 +38,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.version]
 source = "vcs"
-path = "src/speech_prep/_version.py"
 
 [tool.ruff]
 target-version = "py39"
