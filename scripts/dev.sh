@@ -59,7 +59,7 @@ case "$1" in
     ;;
   clean)
     echo "🧹 Cleaning up build artifacts..."
-    rm -rf dist/ build/ *.egg-info/
+    rm -rf dist/ build/
     echo "✅ Cleanup completed!"
     ;;
   *)
