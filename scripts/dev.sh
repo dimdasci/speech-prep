@@ -12,6 +12,7 @@ function usage() {
   echo "  fix       - Fix linting issues automatically"
   echo "  check-all - Run all checks"
   echo "  tests     - Run tests"
+  echo "  hooks     - Run all pre-commit hooks on all files"
   echo ""
   exit 1
 }
@@ -50,6 +51,10 @@ case "$1" in
   tests)
     echo "🧪 Running tests..."
     uv run pytest tests/
+    ;;
+  hooks)
+    echo "🪝 Running all pre-commit hooks on all files..."
+    uv run pre-commit run --all-files
     ;;
   *)
     usage
