@@ -41,9 +41,7 @@ class SoundFile:
             raise FileNotFoundError(f"Audio file not found: {self.path}")
 
         try:
-            duration, self.format, file_size = get_audio_properties(self.path)
-            self.duration = float(duration)
-            self.file_size = int(file_size)
+            self.duration, self.file_size, self.format = get_audio_properties(self.path)
         except Exception as e:
             raise SpeechPrepError(f"Failed to extract metadata: {e}") from e
 
