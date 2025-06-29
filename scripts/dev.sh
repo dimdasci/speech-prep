@@ -13,6 +13,7 @@ function usage() {
   echo "  check-all - Run all checks"
   echo "  tests     - Run tests"
   echo "  hooks     - Run all pre-commit hooks on all files"
+  echo "  clean     - Clean up build artifacts (dist/, build/, *.egg-info/)"
   echo ""
   exit 1
 }
@@ -55,6 +56,11 @@ case "$1" in
   hooks)
     echo "🪝 Running all pre-commit hooks on all files..."
     uv run pre-commit run --all-files
+    ;;
+  clean)
+    echo "🧹 Cleaning up build artifacts..."
+    rm -rf dist/ build/ *.egg-info/
+    echo "✅ Cleanup completed!"
     ;;
   *)
     usage
